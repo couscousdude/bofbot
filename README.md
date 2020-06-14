@@ -4,4 +4,5 @@
 Stinky Discord bot written in discord.js
 
 VERY Buggy
+
 Written in patented ravioli code
