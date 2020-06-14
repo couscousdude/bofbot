@@ -1,0 +1,39 @@
+body {
+    background-color: tan;
+    text-align: center;
+}
+
+ul {
+    display: table;
+    margin: 0 auto;
+}
+
+hr {
+    color: black;
+    background-color: black;
+    border-color: black;
+}
+
+.heading {
+    color: gray;
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.default_text {
+    color: black;
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+#userfeedback {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background-color: blanchedalmond;
+    font-style: italic;
+}
+
+#patch_notes {
+    font-size: xx-large;
+}
+
+#documentation {
+    font-size: larger;
+}
