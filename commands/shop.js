@@ -34,13 +34,17 @@ async function initCurrency(users, curr) {
 initCurrency(Users, currency);
 
 module.exports = {
-	name: 'work',
-    description: 'Work for cash',
+	name: 'shop',
+    description: 'See the Bof Bot Shop\'s stock',
     dmUseAllowed: false,
-    cooldown: 1800,
+    cooldown: 5,
+    aliases: ['market'],
 	execute(message) {
-        const target = message.author;
-        currency.add(target.id, 20);
-        message.channel.send('Congratulations on working! You\'ve earned 20 Bof Bocks. Come back in 30 minutes to work again!');
-	},
+        async function listShop(message) {
+            const items =  await CurrencyShop.findAll();
+            return message.channel.send(items.map(item => `${item.name}: ${item.cost}💰 Bof Bock(s)`).join('\n'), { code: true });
+        }
+
+        listShop(message);
+    },  
 };

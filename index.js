@@ -1,26 +1,25 @@
 // setup our discord client
 const fs = require('fs');
 const Discord = require('discord.js');
-const { prefix, token } = require('./config.json');
+const { prefix, token } = require('./commands/config.json');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 
 // setup our command files
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+    const command = require(`./commands/${file}`);
+
+    client.commands.set(command.name, command);
+}
 
 // setup our cooldowns
 const cooldowns = new Discord.Collection();
 
-for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
-    
-    client.commands.set(command.name, command);
-}
-
-// once the client is ready to execute commands, log 'Ready' to console
-client.once('ready', () => {
-	console.log('Ready!');
+// once the client is ready to execute commands, start some processes
+client.once('ready', async () => {
+	console.log(`Logged in as ${client.user.tag}!`);
 });
 
 // command handler
@@ -54,6 +53,19 @@ if (!cooldowns.has(command.name)) {
 }
 
 // handle command cooldowns
+function msToHMS( ms ) {
+    // 1- Convert to seconds:
+    var seconds = ms / 1000;
+    // 2- Extract hours:
+    var hours = parseInt( seconds / 3600 ); // 3,600 seconds in 1 hour
+    seconds = seconds % 3600; // seconds remaining after extracting hours
+    // 3- Extract minutes:
+    var minutes = parseInt( seconds / 60 ); // 60 seconds in 1 minute
+    // 4- Keep only seconds not extracted to minutes:
+    seconds = seconds % 60;
+    return( hours+":"+minutes+":"+seconds.toFixed());
+}
+
 const now = Date.now();
 const timestamps = cooldowns.get(command.name);
 const cooldownAmount = (command.cooldown || 3) * 1000;
@@ -62,8 +74,8 @@ if (timestamps.has(message.author.id)) {
     const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 
 	if (now < expirationTime) {
-		const timeLeft = (expirationTime - now) / 1000;
-        return message.reply(`woah man, you tryna break me or somethin? Wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`);
+		const timeLeft = msToHMS(expirationTime - now);
+        return message.reply(`gimme a break aight? Wait \`${timeLeft}\` before reusing the \`${command.name}\` command.`);
     }
 }
 
@@ -75,7 +87,9 @@ try {
     command.execute(message, args);
 } catch (error) {
     console.error(error);
-    message.reply('whoop. apparently something fricked up, ping coscusdud about this imediately :^)');
+	message.reply(`uh oh! you made bof bot real mad!`);
+	message.channel.send(`As you attempt to make an offering to the almighty Bof Bot, he slips you a note: 
+	${error}`, { code: true });
 }
 });
 

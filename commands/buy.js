@@ -34,13 +34,27 @@ async function initCurrency(users, curr) {
 initCurrency(Users, currency);
 
 module.exports = {
-	name: 'work',
-    description: 'Work for cash',
+	name: 'buy',
+    description: 'Buy items from the Bof Bot Shop',
     dmUseAllowed: false,
-    cooldown: 1800,
-	execute(message) {
-        const target = message.author;
-        currency.add(target.id, 20);
-        message.channel.send('Congratulations on working! You\'ve earned 20 Bof Bocks. Come back in 30 minutes to work again!');
-	},
+    usage: '<item>',
+    cooldown: 5,
+    aliases: ['purchase'],
+	execute(message, args) {
+        async function buyItem(message, args) {
+            const item = await CurrencyShop.findOne({ where: { name: { [Op.like]: args } } });
+            if (!item) return message.channel.send(`That item doesn't exist.`);
+            if (item.cost > currency.getBalance(message.author.id)) {
+                return message.channel.send(`You currently have ${currency.getBalance(message.author.id)}, but the ${item.name} costs ${item.cost}!`);
+            }
+
+            const user = await Users.findOne({ where: { user_id: message.author.id } });
+            currency.add(message.author.id, -item.cost);
+            await user.addItem(item);
+
+            message.channel.send(`You've bought: ${item.name}.`);
+        }
+
+        buyItem(message, args);
+    },  
 };

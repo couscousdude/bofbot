@@ -1,3 +1,7 @@
 config.json
 database_test.js
 db_test.sqlite
+sequelize_test.js
+test.sqlite
+index_bak.js
+index_copy.js

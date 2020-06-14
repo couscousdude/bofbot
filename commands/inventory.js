@@ -34,13 +34,22 @@ async function initCurrency(users, curr) {
 initCurrency(Users, currency);
 
 module.exports = {
-	name: 'work',
-    description: 'Work for cash',
+	name: 'inventory',
+    description: 'Check your inventory',
     dmUseAllowed: false,
-    cooldown: 1800,
+    usage: '<user>',
+    cooldown: 10,
+    aliases: ['inv', 'backpack'],
 	execute(message) {
-        const target = message.author;
-        currency.add(target.id, 20);
-        message.channel.send('Congratulations on working! You\'ve earned 20 Bof Bocks. Come back in 30 minutes to work again!');
-	},
+        async function getInventory(message) {
+            const target = message.mentions.users.first() || message.author;
+            const user = await Users.findOne({ where: { user_id: target.id } });
+            const items = await user.getItems();
+
+            if (!items.length) return message.channel.send(`${target.tag} has nothing!`);
+            return message.channel.send(`${target.tag} currently has ${items.map(i => `${i.amount} ${i.item.name}`).join(', ')}`);
+        }
+
+        getInventory(message);
+    },  
 };

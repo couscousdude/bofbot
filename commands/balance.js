@@ -31,16 +31,21 @@ async function initCurrency(users, curr) {
     storedBalances.forEach(b => currency.set(b.user_id, b));
 }
 
-initCurrency(Users, currency);
-
 module.exports = {
-	name: 'work',
-    description: 'Work for cash',
+	name: 'balance',
+    description: 'Check balance of users',
     dmUseAllowed: false,
-    cooldown: 1800,
+    usage: '<user>',
+    cooldown: 10,
+    aliases: ['bal', 'money', 'wallet'],
 	execute(message) {
-        const target = message.author;
-        currency.add(target.id, 20);
-        message.channel.send('Congratulations on working! You\'ve earned 20 Bof Bocks. Come back in 30 minutes to work again!');
+		initCurrency(Users, currency);
+		function findBalance(message) {
+			const target = message.mentions.users.first() || message.author;
+			return message.channel.send(
+				`${target.tag} has ${currency.getBalance(target.id)}💰 Bof Bock(s) \n(Note: couscousdude doesn't know how to code so this can take up to 10 seconds to update).`);
+		}
+
+		findBalance(message);
 	},
 };
