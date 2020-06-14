@@ -1,10 +1,11 @@
 module.exports = {
 	name: 'ping',
-    description: 'Ping!',
+    description: 'Test your latency with the bot(basically meaningless)',
     dmUseAllowed: false,
     cooldown: 5,
     aliases: 'pang',
 	execute(message) {
-		message.channel.send('Pong!');
+        const ping = message.createdTimestamp - Date.now();
+        message.channel.send(`ping: \`${ping}\` ms (this is basically meaningless)`)
 	},
 };
