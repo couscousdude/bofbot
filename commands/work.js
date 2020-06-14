@@ -41,8 +41,8 @@ module.exports = {
 			await initCurrency(Users, currency);
 
 			const target = message.author;
-			currency.add(target.id, 20);
-			message.channel.send('Congratulations on working! You\'ve earned 20 Bof Bocks. Come back in 30 minutes to work again!');
+			currency.add(target.id, 60);
+			message.channel.send('Congratulations on working! You\'ve earned 60 Bof Bocks. Come back in 30 minutes to work again!');
 		}
 		
 		workForCash(message);
