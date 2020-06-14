@@ -84,7 +84,7 @@ setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
 // catch errors when executing commands
 try {
-    command.execute(message, args);
+    command.execute(message, args, client);
 } catch (error) {
     console.error(error);
 	message.reply(`uh oh! you made bof bot real mad!`);

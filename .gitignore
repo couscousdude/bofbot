@@ -5,3 +5,4 @@ sequelize_test.js
 test.sqlite
 index_bak.js
 index_copy.js
+database.sqlite
