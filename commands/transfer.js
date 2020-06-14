@@ -31,8 +31,6 @@ async function initCurrency(users, curr) {
     storedBalances.forEach(b => currency.set(b.user_id, b));
 }
 
-initCurrency(Users, currency);
-
 module.exports = {
 	name: 'transfer',
     description: 'Send people money',
@@ -41,18 +39,24 @@ module.exports = {
     cooldown: 5,
     aliases: ['donate', 'gift'],
 	execute(message, args) {
-        const currentAmount = currency.getBalance(message.author.id);
-        const transferAmount = args.find(arg => !/<@!?\d+>/g.test(arg));
-        const transferTarget = message.mentions.users.first();
+        async function transferMoney(message, args) {
+            await initCurrency(Users, currency);
 
-        if (!transferAmount || isNaN(transferAmount)) return message.channel.send(`Sorry ${message.author}, that's an invalid amount.`);
-        if (transferAmount > currentAmount) return message.channel.send(`Sorry ${message.author}, you only have ${currentAmount}.`);
-        if (transferAmount <= 0) return message.channel.send(`Please enter an amount greater than zero, ${message.author}.`);
+            const currentAmount = currency.getBalance(message.author.id);
+            const transferAmount = args.find(arg => !/<@!?\d+>/g.test(arg));
+            const transferTarget = message.mentions.users.first();
 
-        currency.add(message.author.id, -transferAmount);
-        currency.add(transferTarget.id, transferAmount);
+            if (!transferAmount || isNaN(transferAmount)) return message.channel.send(`Sorry ${message.author}, that's an invalid amount.`);
+            if (transferAmount > currentAmount) return message.channel.send(`Sorry ${message.author}, you only have ${currentAmount}.`);
+            if (transferAmount <= 0) return message.channel.send(`Please enter an amount greater than zero, ${message.author}.`);
 
-        return message.channel.send(
-            `Successfully transferred ${transferAmount}💰 Bof Bock(s) to ${transferTarget.tag}. Your current balance is ${currency.getBalance(message.author.id)}💰`);
-    },  
+            currency.add(message.author.id, -transferAmount);
+            currency.add(transferTarget.id, transferAmount);
+
+            return message.channel.send(
+                `Successfully transferred ${transferAmount}💰 Bof Bock(s) to ${transferTarget.tag}. Your current balance is ${currency.getBalance(message.author.id)}💰`);
+        }
+        
+        transferMoney(message, args);
+    }  
 };

@@ -5,7 +5,7 @@ module.exports = {
     cooldown: 5,
     aliases: 'pang',
 	execute(message) {
-        const ping = message.createdTimestamp - Date.now();
+        const ping = Date.now() - message.createdTimestamp
         message.channel.send(`ping: \`${ping}\` ms (this is basically meaningless)`)
 	},
 };

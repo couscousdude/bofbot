@@ -39,13 +39,12 @@ module.exports = {
     cooldown: 10,
     aliases: ['bal', 'money', 'wallet'],
 	execute(message) {
-		initCurrency(Users, currency);
-		function findBalance(message) {
+		async function findBalance(message) {
+			await initCurrency(Users, currency);
 			const target = message.mentions.users.first() || message.author;
 			return message.channel.send(
-				`${target.tag} has ${currency.getBalance(target.id)}💰 Bof Bock(s) \n(Note: couscousdude doesn't know how to code so this can take up to 10 seconds to update).`);
+				`${target.tag} has ${currency.getBalance(target.id)}💰 Bof Bock(s) \n(Note: couscousdude now knows how to code so this instantly updates).`);
 		}
-
 		findBalance(message);
 	},
 };

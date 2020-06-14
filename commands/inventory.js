@@ -31,8 +31,6 @@ async function initCurrency(users, curr) {
     storedBalances.forEach(b => currency.set(b.user_id, b));
 }
 
-initCurrency(Users, currency);
-
 module.exports = {
 	name: 'inventory',
     description: 'Check your inventory',
@@ -42,6 +40,8 @@ module.exports = {
     aliases: ['inv', 'backpack'],
 	execute(message) {
         async function getInventory(message) {
+            await initCurrency(Users, currency);
+            
             const target = message.mentions.users.first() || message.author;
             const user = await Users.findOne({ where: { user_id: target.id } });
             const items = await user.getItems();

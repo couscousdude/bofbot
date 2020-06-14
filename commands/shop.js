@@ -31,8 +31,6 @@ async function initCurrency(users, curr) {
     storedBalances.forEach(b => currency.set(b.user_id, b));
 }
 
-initCurrency(Users, currency);
-
 module.exports = {
 	name: 'shop',
     description: 'See the Bof Bot Shop\'s stock',
@@ -41,6 +39,8 @@ module.exports = {
     aliases: ['market'],
 	execute(message) {
         async function listShop(message) {
+			await initCurrency(Users, currency);
+			
             const items =  await CurrencyShop.findAll();
             return message.channel.send(items.map(item => `${item.name}: ${item.cost}💰 Bof Bock(s)`).join('\n'), { code: true });
         }

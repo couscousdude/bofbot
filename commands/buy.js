@@ -31,8 +31,6 @@ async function initCurrency(users, curr) {
     storedBalances.forEach(b => currency.set(b.user_id, b));
 }
 
-initCurrency(Users, currency);
-
 module.exports = {
 	name: 'buy',
     description: 'Buy items from the Bof Bot Shop',
@@ -42,6 +40,7 @@ module.exports = {
     aliases: ['purchase'],
 	execute(message, args) {
         async function buyItem(message, args) {
+            await initCurrency(Users, currency);
             const item = await CurrencyShop.findOne({ where: { name: { [Op.like]: args } } });
             if (!item) return message.channel.send(`That item doesn't exist.`);
             if (item.cost > currency.getBalance(message.author.id)) {

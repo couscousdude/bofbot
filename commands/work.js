@@ -31,16 +31,20 @@ async function initCurrency(users, curr) {
     storedBalances.forEach(b => currency.set(b.user_id, b));
 }
 
-initCurrency(Users, currency);
-
 module.exports = {
 	name: 'work',
     description: 'Work for cash',
     dmUseAllowed: false,
     cooldown: 1800,
 	execute(message) {
-        const target = message.author;
-        currency.add(target.id, 20);
-        message.channel.send('Congratulations on working! You\'ve earned 20 Bof Bocks. Come back in 30 minutes to work again!');
-	},
+		async function workForCash(message) {
+			await initCurrency(Users, currency);
+
+			const target = message.author;
+			currency.add(target.id, 20);
+			message.channel.send('Congratulations on working! You\'ve earned 20 Bof Bocks. Come back in 30 minutes to work again!');
+		}
+		
+		workForCash(message);
+	}
 };
