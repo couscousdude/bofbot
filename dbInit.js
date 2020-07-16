@@ -4,7 +4,7 @@ const sequelize = new Sequelize('sqlite://./database.sqlite');
 
 const CurrencyShop = sequelize.import('./commands/database/currency_shop');
 const Users = sequelize.import('./commands/database/users');
-const UserItems = sequelize.import('./commands/database/user_inv');
+sequelize.import('./commands/database/user_inv');
 
 const force = process.argv.includes('--force') || process.argv.includes('-f');
 
